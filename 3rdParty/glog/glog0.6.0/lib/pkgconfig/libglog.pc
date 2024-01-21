@@ -1,0 +1,11 @@
+prefix=/opt/libs-x86/glog/glog0.6.0
+exec_prefix=/opt/libs-x86/glog/glog0.6.0/bin
+libdir=/opt/libs-x86/glog/glog0.6.0/lib
+includedir=/opt/libs-x86/glog/glog0.6.0/include
+
+Name: libglog
+Description: Google Log (glog) C++ logging framework
+Version: 0.7.0
+Libs: -L${libdir} -lglog
+Libs.private: -lpthread
+Cflags: -I${includedir}
