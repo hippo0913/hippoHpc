@@ -22,6 +22,11 @@
                 "isDefault": true
             },
             "detail": "调试器生成的任务。"
+        },
+        {
+            "label": "Run Shell Script",
+            "type": "shell",
+            "command": "${workspaceFolder}/script/hippoBuilder.sh"
         }
     ],
     "version": "2.0.0"

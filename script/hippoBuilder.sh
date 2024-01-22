@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source hippoEnv.sh
+scriptBase=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+source $scriptBase/hippoEnv.sh
 
 pushd $hippoBin > /dev/null
 
