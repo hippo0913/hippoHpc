@@ -4,6 +4,9 @@ project(
     hippoHpcCpp
 )
 
+# 添加当前目录到头文件的搜索路径
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 # -Wall: 打开所有警告
 # -g: 生成调试信息，可使用gdb等工具
 # -Werror: 将所有警告信息转换为错误
@@ -42,12 +45,16 @@ option(HIPPO_GLOG "whether enable glog flags." ON)
 if(HIPPO_GLOG)
     message(WARNING "HIPPO_GLOG FLAG IS ON.")
     add_definitions(-DHIPPO_GLOG=1)
+    include_directories(
+        ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/glog//glog0.6.0/include
+    )
+    link_directories(
+        ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/glog/glog0.6.0/lib
+    )
+    set(GLOG_LIBS glog)
 else()
     message(WARNING "HIPPO_GLOG FLAG IS OFF.")
 endif()
-
-# 添加当前目录到头文件的搜索路径
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # 头文件
 include_directories(

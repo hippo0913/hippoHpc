@@ -5,9 +5,13 @@ project(testCommon
     LANGUAGES CXX C
 )
 
+# 源文件
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} TEST_COMMON_SRC_FILES)
-
-# 库目录 库文件
 add_executable(${PROJECT_NAME}
     ${TEST_COMMON_SRC_FILES}
+)
+
+# 库目录 库文件
+target_link_libraries(${PROJECT_NAME}
+    ${GLOG_LIBS}
 )

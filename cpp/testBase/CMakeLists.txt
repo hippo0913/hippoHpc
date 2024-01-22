@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28.0) # 指定CMake的最低版本要求
 
 project(
-    hippoHpcCppTest
+    hippoHpcCppTestBase
 )
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/testCommon)

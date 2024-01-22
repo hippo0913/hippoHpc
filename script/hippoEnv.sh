@@ -10,6 +10,7 @@ PERROR='\e[31m' # 红色表示 ERROR
 hippoHpcScript=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 hippoHpcBase=$hippoHpcScript/../
 hippoHpcBase=$(realpath "$hippoHpcBase")
+hippoHpcLog=$hippoHpcBase/log
 hippoHpcTools=$hippoHpcBase/tools
 hippoHpcCpp=$hippoHpcBase/cpp
 hippoHpcPython=$hippoHpcBase/python
@@ -18,6 +19,7 @@ hippoBin=$hippoHpcBase/bin
 echo -e $PDEBUG "\b\c"
 echo "hippoHpcScript = $hippoHpcScript"
 echo "hippoHpcBase = $hippoHpcBase"
+echo "hippoHpcLog = $hippoHpcLog"
 echo "hippoHpcTools = $hippoHpcTools"
 echo "hippoHpcCpp = $hippoHpcCpp"
 echo "hippoHpcPython = $hippoHpcPython"
@@ -36,7 +38,7 @@ function common_ensure_folder_exists() {
 }
 
 common_ensure_folder_exists $hippoBin
-
+common_ensure_folder_exists $hippoHpcLog
 function build_cmake() {
     echo -e $PINFO "\b\c"
     common_ensure_folder_exists $hippoHpcTools
