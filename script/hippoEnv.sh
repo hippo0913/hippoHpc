@@ -7,25 +7,27 @@ PINFO='\e[36m' # 青色表示 INFORMATION
 PWARNING='\e[33m' # 黄色表示 WARNING
 PERROR='\e[31m' # 红色表示 ERROR
 
-echo "hippoEnv start"
-
 hippoHpcScript=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 hippoHpcBase=$hippoHpcScript/../
 hippoHpcBase=$(realpath "$hippoHpcBase")
-hippo3rdParty=$hippoHpcBase/3rdParty
-hippo3rdPartyBin=$hippo3rdParty/bin
+hippoHpcTools=$hippoHpcBase/tools
+hippoHpcCpp=$hippoHpcBase/cpp
+hippoHpcPython=$hippoHpcBase/python
+hippoBin=$hippoHpcBase/bin
 
-echo -e $PDEBUG
+echo -e $PDEBUG "\b\c"
 echo "hippoHpcScript = $hippoHpcScript"
 echo "hippoHpcBase = $hippoHpcBase"
-echo "hippo3rdParty = $hippo3rdParty"
-echo "hippo3rdPartyBin = $hippo3rdPartyBin"
-echo -e $PNORMAL
+echo "hippoHpcTools = $hippoHpcTools"
+echo "hippoHpcCpp = $hippoHpcCpp"
+echo "hippoHpcPython = $hippoHpcPython"
+echo "hippoBin = $hippoBin"
+echo -e $PNORMAL "\b\c"
 
 cmake_folder="cmake-3.28.0-linux-x86_64"
 cmake_tar_name="$cmake_folder.tar.gz"
 cmake_url="https://cmake.org/files/LatestRelease/$cmake_tar_name"
-cmake_bin=$hippo3rdPartyBin/cmake/bin
+cmake_bin=$hippoHpcTools/cmake/bin
 
 function common_ensure_folder_exists() {
     if [ ! -d "$1" ]; then
@@ -33,29 +35,24 @@ function common_ensure_folder_exists() {
     fi
 }
 
-common_ensure_folder_exists $hippo3rdParty
-common_ensure_folder_exists $hippo3rdPartyBin
+common_ensure_folder_exists $hippoBin
 
 function build_cmake() {
-    echo -e $PINFO
-    echo "Calling cmake_autoConfig.sh"
-
-    common_ensure_folder_exists $hippo3rdPartyBin
-    pushd $hippo3rdPartyBin > /dev/null
+    echo -e $PINFO "\b\c"
+    common_ensure_folder_exists $hippoHpcTools
+    pushd $hippoHpcTools > /dev/null
     if [ ! -d cmake/bin ]; then
         if [ ! -d $cmake_folder ]; then
             if [ ! -f $cmake_tar_name ]; then
                 wget ${cmake_url}
-                tar -zxf "$cmake_tar_name" -C "$hippo3rdPartyBin"
+                tar -zxf "$cmake_tar_name" -C "$hippoHpcTools"
                 rm $cmake_tar_name
             fi
         fi
         ln -s $cmake_folder cmake
     fi
     popd > /dev/null
-
-    echo "Calling cmake_autoConfig.sh end"
-    echo -e $PNORMAL
+    echo -e $PNORMAL "\b\c"
 }
 
 function export_cmake() {
@@ -65,14 +62,4 @@ function export_cmake() {
     echo "cmake_version = $cmake_version"
 }
 
-while [ -n "$1" ]
-do
-    case "$1" in
-    -cmake)
-        export_cmake
-        ;;
-esac
-    shift
-done
-
-echo "hippoEnv end"
+export_cmake
