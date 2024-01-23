@@ -41,6 +41,14 @@ message("3RDPARTY_BASE=${3RDPARTY_BASE}")
 set(TEST_BASE ${CPP_BASE}/testBase)
 message("TEST_BASE=${TEST_BASE}")
 
+set(HIPPO_CUDA_HOME "$ENV{HIPPO_CUDA_HOME}")
+message("HIPPO_CUDA_HOME=${HIPPO_CUDA_HOME}")
+enable_language(CUDA)
+include_directories(${HIPPO_CUDA_HOME}/include)
+link_directories(${HIPPO_CUDA_HOME}/targets/x86_64-linux/lib)
+set(CUDA_LIBS cuda)
+
+# 日志库目前只使用了GLOG，不能关闭
 option(HIPPO_GLOG "whether enable glog flags." ON)
 if(HIPPO_GLOG)
     message(WARNING "HIPPO_GLOG FLAG IS ON.")
@@ -58,8 +66,17 @@ endif()
 
 # 头文件
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cpp/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/cpp/inc/common
+    ${CPP_BASE}/inc
+    ${CPP_BASE}/inc/common
+    ${CPP_BASE}/inc/cuda
+)
+
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_FILES)
+add_executable(${PROJECT_NAME}
+    ${SRC_FILES}
+)
+target_link_libraries(${PROJECT_NAME}
+    ${GLOG_LIBS}
 )
 
 if (EXISTS ${CPP_BASE}/testBase)

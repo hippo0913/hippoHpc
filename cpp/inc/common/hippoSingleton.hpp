@@ -3,7 +3,7 @@
 
 #include "hippoPublic.hpp"
 
-NAMESPACE_HPC_BEGIN
+NAMESPACE_HIPPO_BEGIN
 NAMESPACE_COMMON_BEGIN
 
 // A boost style Signleton implementation
@@ -98,6 +98,6 @@ private:
 };
 
 NAMESPACE_COMMON_END
-NAMESPACE_HPC_END
+NAMESPACE_HIPPO_END
 
 #endif //!__HIPPOSINGLETON__H__

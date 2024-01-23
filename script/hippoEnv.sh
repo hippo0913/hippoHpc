@@ -39,6 +39,8 @@ function common_ensure_folder_exists() {
 
 common_ensure_folder_exists $hippoBin
 common_ensure_folder_exists $hippoHpcLog
+
+# cmake
 function build_cmake() {
     echo -e $PINFO "\b\c"
     common_ensure_folder_exists $hippoHpcTools
@@ -65,3 +67,13 @@ function export_cmake() {
 }
 
 export_cmake
+
+# cuda
+HIPPO_CUDA_HOME=/usr/local/cuda
+HIPPO_CUDNN_HOME=/usr/local/cuda
+
+function export_hpc() {
+    export HIPPO_CUDA_HOME HIPPO_CUDNN_HOME
+}
+
+export_hpc
