@@ -41,18 +41,21 @@ NAMESPACE_DEVICE_BEGIN
 
 // CudaDevice from CUDA Driver API
 struct hippoCudaDevice {
-    explicit hippoCudaDevice(int deviceId = 0) : mDeviceId(deviceId) {
+    explicit hippoCudaDevice() {
         HPC_CUDRV_CHECK(cuInit(0));
         HPC_CUDRV_CHECK(cuDeviceGetCount(&mDeviceCount));
-        assert(mDeviceId < mDeviceCount && mDeviceId >= 0);
-        HPC_CUDRV_CHECK(cuDeviceGet(&mDeviceHandle, mDeviceId));
-        HPC_CUDRV_CHECK(cuDeviceGetUuid(&mDeviceUuid, mDeviceId));
-        HPC_CUDRV_CHECK(cuDeviceGetName(mDeviceName, sizeof(mDeviceName), mDeviceHandle));
     }
 
     // set
     void setDevice() { HPC_CUDA_CHECK(cudaSetDevice(mDeviceId)); }
     void setDeviceFlags(int flags = cudaDeviceScheduleAuto) { HPC_CUDA_CHECK(cudaSetDeviceFlags(flags)); }
+    void setDeviceId(int deviceId = 0) {
+        mDeviceId = deviceId;
+        assert(mDeviceId < mDeviceCount && mDeviceId >= 0);
+        HPC_CUDRV_CHECK(cuDeviceGet(&mDeviceHandle, mDeviceId));
+        HPC_CUDRV_CHECK(cuDeviceGetUuid(&mDeviceUuid, mDeviceId));
+        HPC_CUDRV_CHECK(cuDeviceGetName(mDeviceName, sizeof(mDeviceName), mDeviceHandle));
+    }
 
     // query
     int queryDeviceAttributes(CUdevice_attribute attribute) {
@@ -72,11 +75,13 @@ private:
     int mDeviceId = -1;
     CUdevice mDeviceHandle = -1;
     CUuuid mDeviceUuid;
-    char mDeviceName[64];
+    char mDeviceName[64] = {0};
     int mDeviceAttributes = -1;
 };
 
 NAMESPACE_DEVICE_END
 NAMESPACE_HIPPO_END
+
+#define hippoCudaDeviceInst (hippo::common::GlobalSingleton<hippo::device::hippoCudaDevice>::instance())
 
 #endif  //!__HIPPOCUDA__H__

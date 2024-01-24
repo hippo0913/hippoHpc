@@ -11,7 +11,7 @@ add_executable(${PROJECT_NAME}
     ${TEST_CUDA_DIVICE_SRC_FILES}
 )
 
-# 库目录 库文件
+# 库文件
 target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBS}
     ${CUDA_LIBS}

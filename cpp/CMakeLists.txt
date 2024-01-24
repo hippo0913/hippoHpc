@@ -77,6 +77,7 @@ add_executable(${PROJECT_NAME}
 )
 target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBS}
+    ${CUDA_LIBS}
 )
 
 if (EXISTS ${CPP_BASE}/testBase)

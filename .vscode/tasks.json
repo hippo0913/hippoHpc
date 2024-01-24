@@ -26,7 +26,8 @@
         {
             "label": "Run Shell Script",
             "type": "shell",
-            "command": "${workspaceFolder}/script/hippoBuilder.sh"
+            "command": "rm ${workspaceFolder}/log/*;${workspaceFolder}/script/hippoBuilder.sh"
+            // "command": "${workspaceFolder}/script/hippoBuilder.sh"
         }
     ],
     "version": "2.0.0"
