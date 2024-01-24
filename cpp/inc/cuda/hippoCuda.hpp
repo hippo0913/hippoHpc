@@ -6,25 +6,25 @@
 
 #include "hippoCommon.hpp"
 
-#define HPC_CUDRV_CHECK(err)                                                                     \
-    do {                                                                                         \
-        if (err != CUDA_SUCCESS) {                                                               \
-            char const* pStr = nullptr;                                                          \
-            cuGetErrorString(err, &pStr);                                                        \
+#define HPC_CUDRV_CHECK(err)                                                                                          \
+    do {                                                                                                              \
+        if (err != CUDA_SUCCESS) {                                                                                    \
+            char const* pStr = nullptr;                                                                               \
+            cuGetErrorString(err, &pStr);                                                                             \
             LOG(ERROR) << "CudaDrv failure at " << __PRETTY_FUNCTION__ << ", err = " << err << ", errstr = " << pStr; \
-            sleep(1U);                                                                           \
-            abort();                                                                             \
-        }                                                                                        \
+            sleep(1U);                                                                                                \
+            abort();                                                                                                  \
+        }                                                                                                             \
     } while (false)
 
-#define HPC_CUDA_CHECK(err)                                                                        \
-    do {                                                                                           \
-        if (err != cudaSuccess) {                                                                  \
-            hpc::common::HPC_LOG_ERR("CudaRT failure at %s:%d : err = %d, errdesc = %s", __FILE__, \
-                                     __LINE__, err, cudaGetErrorString(err));                      \
-            sleep(1U);                                                                             \
-            abort();                                                                               \
-        }                                                                                          \
+#define HPC_CUDA_CHECK(err)                                                                \
+    do {                                                                                   \
+        if (err != cudaSuccess) {                                                          \
+            LOG(ERROR) << "CudaRT failure at " << __PRETTY_FUNCTION__ << ", err = " << err \
+                       << ", errdesc = " << cudaGetErrorString(err);                       \
+            sleep(1U);                                                                     \
+            abort();                                                                       \
+        }                                                                                  \
     } while (false)
 
 #define HPC_CUDLA_CHECK(err)                                                                       \
@@ -41,20 +41,39 @@ NAMESPACE_DEVICE_BEGIN
 
 // CudaDevice from CUDA Driver API
 struct hippoCudaDevice {
-    explicit hippoCudaDevice(int deviceId = 0)
-        : mDeviceCount(0), mDeviceId(deviceId) {
+    explicit hippoCudaDevice(int deviceId = 0) : mDeviceId(deviceId) {
         HPC_CUDRV_CHECK(cuInit(0));
         HPC_CUDRV_CHECK(cuDeviceGetCount(&mDeviceCount));
         assert(mDeviceId < mDeviceCount && mDeviceId >= 0);
+        HPC_CUDRV_CHECK(cuDeviceGet(&mDeviceHandle, mDeviceId));
+        HPC_CUDRV_CHECK(cuDeviceGetUuid(&mDeviceUuid, mDeviceId));
+        HPC_CUDRV_CHECK(cuDeviceGetName(mDeviceName, sizeof(mDeviceName), mDeviceHandle));
     }
 
-    int deviceCount() const { return mDeviceCount; }
+    // set
+    void setDevice() { HPC_CUDA_CHECK(cudaSetDevice(mDeviceId)); }
+    void setDeviceFlags(int flags = cudaDeviceScheduleAuto) { HPC_CUDA_CHECK(cudaSetDeviceFlags(flags)); }
 
-    void setDeviceFlags()
+    // query
+    int queryDeviceAttributes(CUdevice_attribute attribute) {
+        HPC_CUDRV_CHECK(cuDeviceGetAttribute(&mDeviceAttributes, attribute, mDeviceHandle));
+        return mDeviceAttributes;
+    }
+
+    // get
+    int deviceCount() const { return mDeviceCount; }
+    int deviceId() const { return mDeviceId; }
+    CUdevice deviceHandle() const { return mDeviceHandle; }
+    CUuuid deviceUuid() const { return mDeviceUuid; }
+    const char* deviceName() { return mDeviceName; }
 
 private:
     int mDeviceCount = -1;
     int mDeviceId = -1;
+    CUdevice mDeviceHandle = -1;
+    CUuuid mDeviceUuid;
+    char mDeviceName[64];
+    int mDeviceAttributes = -1;
 };
 
 NAMESPACE_DEVICE_END
