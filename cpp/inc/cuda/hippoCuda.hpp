@@ -55,6 +55,8 @@ struct hippoCudaDevice {
         HPC_CUDRV_CHECK(cuDeviceGet(&mDeviceHandle, mDeviceId));
         HPC_CUDRV_CHECK(cuDeviceGetUuid(&mDeviceUuid, mDeviceId));
         HPC_CUDRV_CHECK(cuDeviceGetName(mDeviceName, sizeof(mDeviceName), mDeviceHandle));
+        cudaDriverGetVersion(&mDriverVersion);
+        cudaRuntimeGetVersion(&mRuntimeVersion);
     }
 
     // query
@@ -63,20 +65,28 @@ struct hippoCudaDevice {
         return mDeviceAttributes;
     }
 
+    void queryDeviceProperties(cudaDeviceProp& deviceProp) { HPC_CUDA_CHECK(cudaGetDeviceProperties(&mDeviceProp, mDeviceId)); }
+
     // get
+
     int deviceCount() const { return mDeviceCount; }
     int deviceId() const { return mDeviceId; }
     CUdevice deviceHandle() const { return mDeviceHandle; }
     CUuuid deviceUuid() const { return mDeviceUuid; }
     const char* deviceName() { return mDeviceName; }
+    int driverVersion() const { return mDriverVersion; }
+    int runtimeVersion() const { return mRuntimeVersion; }
 
 private:
     int mDeviceCount = -1;
     int mDeviceId = -1;
     CUdevice mDeviceHandle = -1;
     CUuuid mDeviceUuid;
-    char mDeviceName[64] = {0};
+    char mDeviceName[256] = {0};
     int mDeviceAttributes = -1;
+    cudaDeviceProp mDeviceProp;
+    int mDriverVersion = 0;
+    int mRuntimeVersion = 0;
 };
 
 NAMESPACE_DEVICE_END

@@ -4,6 +4,10 @@
 int main(int argc, char const *argv[]) {
     hippoProcessInst.initialize();
     hippoCudaDeviceInst.setDeviceId(0);
+    int driverVersion = hippoCudaDeviceInst.driverVersion();
+    int runtimeVersion = hippoCudaDeviceInst.runtimeVersion();
+    LOG(INFO) << "driver version: " << driverVersion / 1000 << "." << (driverVersion % 100) / 10
+              << ", runtime version: " << runtimeVersion / 1000 << "." << (runtimeVersion % 100) / 10;
     LOG(INFO) << "deviceCount = " << hippoCudaDeviceInst.deviceCount() << ", deviceId = " << hippoCudaDeviceInst.deviceId()
               << ", deviceHandle = " << hippoCudaDeviceInst.deviceHandle()
               << ", deviceUuid = " << hippoCudaDeviceInst.deviceUuid().bytes

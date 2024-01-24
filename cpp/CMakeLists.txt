@@ -46,7 +46,7 @@ message("HIPPO_CUDA_HOME=${HIPPO_CUDA_HOME}")
 enable_language(CUDA)
 include_directories(${HIPPO_CUDA_HOME}/include)
 link_directories(${HIPPO_CUDA_HOME}/targets/x86_64-linux/lib)
-set(CUDA_LIBS cuda)
+set(CUDA_LIBS cuda cudart)
 
 # 日志库目前只使用了GLOG，不能关闭
 option(HIPPO_GLOG "whether enable glog flags." ON)
@@ -62,6 +62,14 @@ if(HIPPO_GLOG)
     set(GLOG_LIBS glog)
 else()
     message(WARNING "HIPPO_GLOG FLAG IS OFF.")
+endif()
+
+option(HIPPO_MULTI_CUDACONTEXT "whether enable multiple cuda context." ON)
+if (HIPPO_MULTI_CUDACONTEXT)
+  message(WARNING "DHIPPO_MULTI_CUDACONTEXT is ON.")
+  add_definitions(-DHIPPO_MULTI_CUDACONTEXT=1)
+else()
+  message(WARNING "DHIPPO_MULTI_CUDACONTEXT is OFF.")
 endif()
 
 # 头文件
