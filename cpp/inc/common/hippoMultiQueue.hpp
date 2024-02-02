@@ -1,7 +1,7 @@
 #ifndef __HIPPOMULTIQUEUE__H__
 #define __HIPPOMULTIQUEUE__H__
 
-#include "hippoCommon.hpp"
+#include "hippoCommonPublic.hpp"
 #include <array>
 #include <functional>
 

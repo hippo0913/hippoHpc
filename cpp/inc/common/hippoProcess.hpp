@@ -5,8 +5,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
-#include "hippoSingleton.hpp"
 #include "hippoLog.hpp"
+#include "hippoSingleton.hpp"
 
 NAMESPACE_HIPPO_BEGIN
 NAMESPACE_COMMON_BEGIN
@@ -39,6 +39,8 @@ public:
 NAMESPACE_COMMON_END
 NAMESPACE_HIPPO_END
 
-#define hippoProcessInst (hippo::common::GlobalSingleton<hippo::hippoProcess>::instance())
+#ifndef hippoProcessInst
+#define hippoProcessInst (hippo::common::GlobalSingleton<hippo::common::hippoProcess>::instance())
+#endif  // !hippoProcessInst
 
 #endif  //!__HIPPOPROCESS__H__

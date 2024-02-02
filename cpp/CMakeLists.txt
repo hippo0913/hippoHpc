@@ -44,7 +44,7 @@ message("TEST_BASE=${TEST_BASE}")
 set(HIPPO_CUDA_HOME "$ENV{HIPPO_CUDA_HOME}")
 message("HIPPO_CUDA_HOME=${HIPPO_CUDA_HOME}")
 enable_language(CUDA)
-include_directories(${HIPPO_CUDA_HOME}/include)
+include_directories(${HIPPO_CUDA_HOME}/targets/x86_64-linux/include)
 link_directories(${HIPPO_CUDA_HOME}/targets/x86_64-linux/lib)
 set(CUDA_LIBS cuda cudart)
 

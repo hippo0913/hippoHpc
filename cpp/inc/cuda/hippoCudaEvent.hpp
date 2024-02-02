@@ -1,9 +1,7 @@
 #ifndef __HIPPOCUDAEVENT__H__
 #define __HIPPOCUDAEVENT__H__
 
-#include <cuda_runtime_api.h>
-#include "hippoPublic.hpp"
-#include "hippoCuda.hpp"
+#include "hippoCudaPublic.hpp"
 
 NAMESPACE_HIPPO_BEGIN
 NAMESPACE_HPC_BEGIN

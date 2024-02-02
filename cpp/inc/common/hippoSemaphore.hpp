@@ -1,7 +1,7 @@
 #ifndef __HIPPOSEMAPHORE__H__
 #define __HIPPOSEMAPHORE__H__
 
-#include "hippoPublic.hpp"
+#include "hippoCommonPublic.hpp"
 #include <semaphore.h>
 #include <cassert>
 

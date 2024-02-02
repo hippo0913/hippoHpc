@@ -1,7 +1,7 @@
 #ifndef __HIPPOSINGLETON__H__
 #define __HIPPOSINGLETON__H__
 
-#include "hippoPublic.hpp"
+#include "hippoCommonPublic.hpp"
 
 NAMESPACE_HIPPO_BEGIN
 NAMESPACE_COMMON_BEGIN

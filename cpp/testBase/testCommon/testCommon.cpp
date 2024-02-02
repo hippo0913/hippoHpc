@@ -1,4 +1,4 @@
-#include "hippoProcess.hpp"
+#include "hippoCommon.hpp"
 
 int main(int argc, char** argv) {
     hippoProcessInst.initialize();

@@ -1,7 +1,7 @@
 #ifndef __HIPPOCUDAPROFILE__H__
 #define __HIPPOCUDAPROFILE__H__
 
-#include "hippoPublic.hpp"
+#include "hippoCudaPublic.hpp"
 
 #if HIPPO_PROFILING == 1
 
@@ -24,6 +24,6 @@ NAMESPACE_HIPPO_END
 #else
 #define HPC_PROFILING_AUTORANGE(msg)
 #define HPC_PROFILING_MARK(msg)
-#endif  // HIPPO_PROFILING == 1
+#endif  //! HIPPO_PROFILING == 1
 
 #endif  //!__HIPPOCUDAPROFILE__H__
