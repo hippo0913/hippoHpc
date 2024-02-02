@@ -51,6 +51,13 @@ int main(int argc, char const *argv[]) {
     supportRet = hippoCudaDeviceInst.queryDeviceAttributes(CU_DEVICE_ATTRIBUTE_CAN_USE_HOST_POINTER_FOR_REGISTERED_MEM);
     LOG(INFO) << "CU_DEVICE_ATTRIBUTE_CAN_USE_HOST_POINTER_FOR_REGISTERED_MEM support ret = " << supportRet;
 
+    supportRet = hippoCudaDeviceInst.queryDeviceAttributes(CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR);
+    LOG(INFO) << "CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR support ret = " << supportRet;
+    supportRet = hippoCudaDeviceInst.queryDeviceAttributes(CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR);
+    LOG(INFO) << "CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR support ret = " << supportRet;
+    supportRet = hippoCudaDeviceInst.queryDeviceAttributes(CU_DEVICE_ATTRIBUTE_COMPUTE_PREEMPTION_SUPPORTED);
+    LOG(INFO) << "CU_DEVICE_ATTRIBUTE_COMPUTE_PREEMPTION_SUPPORTED support ret = " << supportRet;
+
     hippoProcessInst.finalize();
     return 0;
 }

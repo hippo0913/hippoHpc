@@ -73,6 +73,12 @@
         "string_view": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "iterator": "cpp",
+        "memory_resource": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "slist": "cpp",
+        "shared_mutex": "cpp"
     }
 }

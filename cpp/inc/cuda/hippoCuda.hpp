@@ -45,6 +45,7 @@ struct hippoCudaDevice {
         HPC_CUDRV_CHECK(cuInit(0));
         HPC_CUDRV_CHECK(cuDeviceGetCount(&mDeviceCount));
     }
+    ~hippoCudaDevice() { HPC_CUDA_CHECK(cudaDeviceReset()); }
 
     // set
     void setDevice() { HPC_CUDA_CHECK(cudaSetDevice(mDeviceId)); }

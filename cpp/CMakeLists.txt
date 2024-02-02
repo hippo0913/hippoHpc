@@ -66,10 +66,10 @@ endif()
 
 option(HIPPO_MULTI_CUDACONTEXT "whether enable multiple cuda context." ON)
 if (HIPPO_MULTI_CUDACONTEXT)
-  message(WARNING "DHIPPO_MULTI_CUDACONTEXT is ON.")
+  message(WARNING "HIPPO_MULTI_CUDACONTEXT is ON.")
   add_definitions(-DHIPPO_MULTI_CUDACONTEXT=1)
 else()
-  message(WARNING "DHIPPO_MULTI_CUDACONTEXT is OFF.")
+  message(WARNING "HIPPO_MULTI_CUDACONTEXT is OFF.")
 endif()
 
 # 头文件
