@@ -9,6 +9,7 @@
 #include "hippoLog.hpp"
 
 NAMESPACE_HIPPO_BEGIN
+NAMESPACE_COMMON_BEGIN
 
 class hippoProcess {
 public:
@@ -35,6 +36,7 @@ public:
     }
 };
 
+NAMESPACE_COMMON_END
 NAMESPACE_HIPPO_END
 
 #define hippoProcessInst (hippo::common::GlobalSingleton<hippo::hippoProcess>::instance())
