@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28.0) # 指定CMake的最低版本要求
+cmake_minimum_required(VERSION 3.16) # 指定CMake的最低版本要求
 
 project(
     hippoHpcCpp
@@ -41,11 +41,11 @@ message("3RDPARTY_BASE=${3RDPARTY_BASE}")
 set(TEST_BASE ${CPP_BASE}/testBase)
 message("TEST_BASE=${TEST_BASE}")
 
-set(HIPPO_CUDA_HOME "$ENV{HIPPO_CUDA_HOME}")
-message("HIPPO_CUDA_HOME=${HIPPO_CUDA_HOME}")
+set(CUDA_HOME "$ENV{CUDA_HOME}")
+message("CUDA_HOME=${CUDA_HOME}")
 enable_language(CUDA)
-include_directories(${HIPPO_CUDA_HOME}/targets/x86_64-linux/include)
-link_directories(${HIPPO_CUDA_HOME}/targets/x86_64-linux/lib)
+include_directories(${CUDA_HOME}/targets/x86_64-linux/include)
+link_directories(${CUDA_HOME}/targets/x86_64-linux/lib)
 set(CUDA_LIBS cuda cudart)
 
 # 日志库目前只使用了GLOG，不能关闭

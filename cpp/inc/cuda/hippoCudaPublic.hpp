@@ -1,5 +1,5 @@
-#ifndef __HIPPOPUBLIC__H__
-#define __HIPPOPUBLIC__H__
+#ifndef __HIPPOCUDAPUBLIC__H__
+#define __HIPPOCUDAPUBLIC__H__
 
 #include <cuda.h>
 #include <cuda_runtime_api.h>
@@ -36,4 +36,4 @@
         }                                                                                          \
     } while (false)
 
-#endif  //!__HIPPOPUBLIC__H__
+#endif  //!__HIPPOCUDAPUBLIC__H__

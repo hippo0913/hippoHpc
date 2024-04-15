@@ -9,11 +9,11 @@ NAMESPACE_HPC_BEGIN
 class CudaTimeStamp {
 public:
     explicit CudaTimeStamp() {}
-    CudaTimestamp(const CudaTimestamp&) = delete;
-    CudaTimestamp& operator=(const CudaTimestamp&) = delete;
-    CudaTimestamp(CudaTimestamp&&) = delete;
-    CudaTimestamp& operator=(CudaTimestamp&&) = delete;
-    ~CudaTimestamp() = default;
+    CudaTimeStamp(const CudaTimeStamp&) = delete;
+    CudaTimeStamp& operator=(const CudaTimeStamp&) = delete;
+    CudaTimeStamp(CudaTimeStamp&&) = delete;
+    CudaTimeStamp& operator=(CudaTimeStamp&&) = delete;
+    ~CudaTimeStamp() = default;
 
     void record(cudaStream_t stream) {
         autoAllocator();
@@ -21,7 +21,7 @@ public:
     }
 
     // Returns time elapsed time in milliseconds
-    float operator-(const CudaTimestamp& e) const {
+    float operator-(const CudaTimeStamp& e) const {
         float time{0};
         HPC_CUDA_CHECK(cudaEventSynchronize(mEvent.get()));
         HPC_CUDA_CHECK(cudaEventElapsedTime(&time, e.mEvent.get(), mEvent.get()));
@@ -33,11 +33,11 @@ private:
         if (!mEvent) {
             cudaEvent_t ev = nullptr;
             HPC_CUDA_CHECK(cudaEventCreateWithFlags(&ev, cudaEventBlockingSync));
-            mEvent.reset(ev, [](cudaEvent_t ev)) {
+            mEvent.reset(ev, [](cudaEvent_t ev) {
                 if (ev) {
                     HPC_CUDA_CHECK(cudaEventDestroy(ev));
                 }
-            }
+            });
         }
     }
 
@@ -47,7 +47,8 @@ private:
 template <bool WaitOnCpu>
 struct CudaEventWithFlag {
 public:
-    explicit CudaEventWithFlag() : mFlags(cudaEventDisableTiming | (WaitOnCpu ? cudaEventBlockingSync : 0)), mEvent(nullptr) {}
+    explicit CudaEventWithFlag()
+        : mFlags(cudaEventDisableTiming | (WaitOnCpu ? cudaEventBlockingSync : 0)), mEvent(nullptr) {}
     CudaEventWithFlag(const CudaEventWithFlag&) = delete;
     CudaEventWithFlag& operator=(const CudaEventWithFlag&) = delete;
     CudaEventWithFlag(CudaEventWithFlag&&) = delete;
@@ -63,7 +64,7 @@ public:
         HPC_CUDA_CHECK(cudaStreamWaitEvent(stream, mEvent.get(), cudaEventWaitDefault));
     }
 
-    void synchronize(cudaStream_t stream) const { HPC_CUDA_CHECK(cudaEventSynchronize(mEvent.get())); }
+    void synchronize() const { HPC_CUDA_CHECK(cudaEventSynchronize(mEvent.get())); }
 
     cudaEvent_t get() const {
         autoAlloc();

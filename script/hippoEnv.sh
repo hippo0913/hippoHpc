@@ -66,14 +66,14 @@ function export_cmake() {
     echo "cmake_version = $cmake_version"
 }
 
-export_cmake
+# export_cmake
 
 # cuda
-HIPPO_CUDA_HOME=/usr/local/cuda
-HIPPO_CUDNN_HOME=/usr/local/cuda
+CUDA_HOME=/usr/local/cuda
+CUDNN_HOME=/usr/local/cuda
 
 function export_hpc() {
-    export HIPPO_CUDA_HOME HIPPO_CUDNN_HOME
+    export CUDA_HOME CUDNN_HOME
 }
 
 export_hpc

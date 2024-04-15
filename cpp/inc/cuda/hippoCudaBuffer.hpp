@@ -31,10 +31,10 @@ template <typename Allocator, typename Deallocator>
 struct CudaBufferEager {
     explicit CudaBufferEager(size_t size)
         : mSize(size)
-        , mPtr[&mSize](
-              {
+        , mPtr(
+              [&size] {
                   void *ptr = nullptr;
-                  Allocator{}(mPtr, mSize);
+                  Allocator{}(&ptr, size);
                   return ptr;
               }(),
               Deallocator{}) {}
@@ -58,17 +58,17 @@ struct CudaBufferLazy {
     ~CudaBufferLazy() = default;
 
     void *get() const {
-        if (!mPtr) {
+        if (mPtr == nullptr) {
             void *ptr = nullptr;
-            Allocator()(&mPtr, mSize);
-            mPtr.set(ptr, Deallocator());
+            Allocator()(&ptr, mSize);
+            mPtr.reset(ptr, Deallocator());
         }
         return mPtr.get();
     }
 
 private:
     mutable std::shared_ptr<void> mPtr;
-    size_t mSize = 0;
+    size_t mSize = 0U;
 };
 
 #if HIPPO_MULTI_CUDACONTEXT == 1
@@ -82,7 +82,7 @@ using CudaBuffer = CudaBufferEager<Allocator, Deallocator>;
 constexpr bool has_single_bit(size_t x) noexcept { return x && !(x & (x - 1)); }
 
 template <typename Scalar, size_t Align>
-constexpr size_t align(size_t n) noexcept {
+constexpr size_t alignValue(size_t n) noexcept {
     static_assert(has_single_bit(Align), "Align must be an integral power of two.");
     return ((n + Align - 1) & (~(Align - 1)));
 }
@@ -96,16 +96,17 @@ struct TensorAttr {
     static constexpr size_t w = W;
     static constexpr size_t w_bytes = elem_bytes * w;
     static constexpr size_t align = Align;
-    static constexpr size_t w_stride = std::max(align<Scalar, Align>(sizeof(Scalar) * W), WStride);
+    static constexpr size_t w_stride = std::max(alignValue<Scalar, Align>(sizeof(Scalar) * W), WStride);
     static constexpr size_t h_stride = std::max(h, HStride);
     static constexpr size_t alloc_bytes = n * c * w_stride * h_stride;
 };
 
-template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0, size_t HStride = 0>
+template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0,
+          size_t HStride = 0>
 struct CudaBufferDevice {
     static constexpr TensorAttr<Scalar, N, C, H, W, Align, WStride, HStride> attr{};
     CudaBufferDevice() : mBuffer(attr.alloc_bytes) {}
-    CudaBufferDevice(CudaBufferDevice cosnst &) = delete;
+    CudaBufferDevice(CudaBufferDevice const &) = delete;
     CudaBufferDevice &operator=(const CudaBufferDevice &) = delete;
     ~CudaBufferDevice() = default;
 
@@ -115,7 +116,8 @@ private:
     CudaBuffer<DeviceAllocator, DeviceDeallocator> mBuffer;
 };
 
-template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0, size_t HStride = 0>
+template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0,
+          size_t HStride = 0>
 struct CudaBufferHost {
     static constexpr TensorAttr<Scalar, N, C, H, W, Align, WStride, HStride> attr{};
     CudaBufferHost() : mBuffer(attr.alloc_bytes) {}
@@ -129,7 +131,8 @@ private:
     CudaBuffer<HostAllocator, HostDeallocator> mBuffer;
 };
 
-template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0, size_t HStride = 0>
+template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0,
+          size_t HStride = 0>
 struct CudaBufferManaged {
     static constexpr TensorAttr<Scalar, N, C, H, W, Align, WStride, HStride> attr{};
     CudaBufferManaged() : mBuffer(attr.alloc_bytes) {}
@@ -152,7 +155,8 @@ private:
     CudaBuffer<ManagedAllocator, DeviceDeallocator> mBuffer;
 };
 
-template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0, size_t HStride = 0>
+template <typename Scalar, size_t N, size_t C, size_t H, size_t W, size_t Align = 1, size_t WStride = 0,
+          size_t HStride = 0>
 struct CudaBufferMirrored {
     static constexpr TensorAttr<Scalar, N, C, H, W, Align, WStride, HStride> attr{};
     CudaBufferMirrored() : mDevBuffer(attr.alloc_bytes), mHostBuffer(attr.alloc_bytes) {}
@@ -164,11 +168,13 @@ struct CudaBufferMirrored {
     Scalar *getCpuPtr() const { return static_cast<Scalar *>(mHostBuffer.get()); }
 
     void hostToDevice(cudaStream_t stream) const {
-        HPC_CUDA_CHECK(cudaMemcpyAsync(mDevBuffer.get(), mHostBuffer.get(), attr.alloc_bytes, cudaMemcpyHostToDevice, stream));
+        HPC_CUDA_CHECK(
+            cudaMemcpyAsync(mDevBuffer.get(), mHostBuffer.get(), attr.alloc_bytes, cudaMemcpyHostToDevice, stream));
     }
 
     void deviceToHost(cudaStream_t stream) const {
-        HPC_CUDA_CHECK(cudaMemcpyAsync(mHostBuffer.get(), mDevBuffer.get(), attr.alloc_bytes, cudaMemcpyDeviceToHost, stream));
+        HPC_CUDA_CHECK(
+            cudaMemcpyAsync(mHostBuffer.get(), mDevBuffer.get(), attr.alloc_bytes, cudaMemcpyDeviceToHost, stream));
     }
 
 private:
