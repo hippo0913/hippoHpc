@@ -33,10 +33,16 @@ struct hippoCudaDevice {
         return mDeviceAttributes;
     }
 
-    void queryDeviceProperties(cudaDeviceProp& deviceProp) { HPC_CUDA_CHECK(cudaGetDeviceProperties(&mDeviceProp, mDeviceId)); }
+    void queryDeviceProperties(cudaDeviceProp& deviceProp) {
+        HPC_CUDA_CHECK(cudaGetDeviceProperties(&mDeviceProp, mDeviceId));
+    }
+
+    int QueryStreamPriority(int* least, int* greatest) {
+        HPC_CUDA_CHECK(cudaDeviceGetStreamPriorityRange(least, greatest));
+        return 0;
+    }
 
     // get
-
     int deviceCount() const { return mDeviceCount; }
     int deviceId() const { return mDeviceId; }
     CUdevice deviceHandle() const { return mDeviceHandle; }

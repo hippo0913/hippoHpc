@@ -33,8 +33,15 @@ private:
         if (!mEvent) {
             cudaEvent_t ev = nullptr;
             HPC_CUDA_CHECK(cudaEventCreateWithFlags(&ev, cudaEventBlockingSync));
+#if HIPPO_DEBUG == 1
+            printf("%s:%d, pid = %lu, event = %p, created.\n", __PRETTY_FUNCTION__, __LINE__, pthread_self(), ev);
+#endif  // !HIPPO_DEBUG == 1
             mEvent.reset(ev, [](cudaEvent_t ev) {
                 if (ev) {
+#if HIPPO_DEBUG == 1
+                    printf("%s:%d, pid = %lu, event = %p, will be destroied.\n", __PRETTY_FUNCTION__, __LINE__,
+                           pthread_self(), ev);
+#endif  // !HIPPO_DEBUG == 1
                     HPC_CUDA_CHECK(cudaEventDestroy(ev));
                 }
             });
@@ -76,8 +83,15 @@ private:
         if (!mEvent) {
             cudaEvent_t ev = nullptr;
             HPC_CUDA_CHECK(cudaEventCreateWithFlags(&ev, mFlags));
+#if HIPPO_DEBUG == 1
+            printf("%s:%d, pid = %lu, event = %p, created.\n", __PRETTY_FUNCTION__, __LINE__, pthread_self(), ev);
+#endif  // !HIPPO_DEBUG == 1
             mEvent.reset(ev, [](cudaEvent_t ev) {
                 if (ev) {
+#if HIPPO_DEBUG == 1
+                    printf("%s:%d, pid = %lu, event = %p, will be destroied.\n", __PRETTY_FUNCTION__, __LINE__,
+                           pthread_self(), ev);
+#endif  // !HIPPO_DEBUG == 1
                     HPC_CUDA_CHECK(cudaEventDestroy(ev));
                 }
             });

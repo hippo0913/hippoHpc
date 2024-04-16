@@ -48,6 +48,17 @@ include_directories(${CUDA_HOME}/targets/x86_64-linux/include)
 link_directories(${CUDA_HOME}/targets/x86_64-linux/lib)
 set(CUDA_LIBS cuda cudart)
 
+option(HIPPO_DEBUG "whether enable debug flags." OFF)
+if(HIPPO_DEBUG)
+    message(WARNING "HIPPO DEBUG FLAG IS ON.")
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of Debug, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    add_definitions(-DHIPPO_DEBUG=1)
+else()
+    message(WARNING "HIPPO RELEASE FLAG IS ON.")
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of Release, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    add_definitions(-DHIPPO_RELEASE=1)
+endif()
+
 # 日志库目前只使用了GLOG，不能关闭
 option(HIPPO_GLOG "whether enable glog flags." ON)
 if(HIPPO_GLOG)
