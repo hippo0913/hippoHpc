@@ -1,17 +1,30 @@
-cmake_minimum_required(VERSION 3.16) # 指定CMake的最低版本要求
+#定义函数，把文件夹下所有子文件夹保存在变量中
+macro(list_sub_dir RESULT CUR_DIR FILTER_LIST)
+    file(GLOB_RECURSE CHILDREN LIST_DIRECTORIES true  ${CUR_DIR}/*)
+    set(DIR_LIST ${CUR_DIR})
+    foreach(CHILD ${CHILDREN})
+        if(IS_DIRECTORY ${CHILD})
+            set(ADD_FLAG ON)
+            foreach(FILTER ${FILTER_LIST})
+                string(FIND "${FILTER}" "${CHILD}" RET)
+                if(${RET} EQUAL -1)
+                    set(ADD_FLAG OFF)
+                endif()
+            endforeach()
+            if(${ADD_FLAG})
+                list(APPEND DIR_LIST ${CHILD})
+            endif()
+            unset(ADD_FLAG)
+        endif()
+    endforeach()
+    set(${RESULT} ${DIR_LIST})
+endmacro()
 
-project(
-    hippoHpcCppTestBase
-)
-
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/testCommon)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/testCommon)
-else()
-    message(WARNING "${CMAKE_CURRENT_SOURCE_DIR}/testCommon dir does not exist")
-endif()
-
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/testCudaDevice)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/testCudaDevice)
-else()
-    message(WARNING "${CMAKE_CURRENT_SOURCE_DIR}/testCudaDevice dir does not exist")
-endif()
+#自动添加子目录下的CMakeLists
+file(GLOB SUB_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
+foreach(DIR ${SUB_DIRS})
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${DIR}/CMakeLists.txt)
+        message("test_name=${DIR},abs_path=${CMAKE_CURRENT_SOURCE_DIR}/${DIR}")
+        add_subdirectory(${DIR})
+    endif()
+endforeach()
