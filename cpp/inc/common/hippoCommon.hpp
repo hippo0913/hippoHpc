@@ -6,5 +6,6 @@
 #include "hippoProcess.hpp"
 #include "hippoSemaphore.hpp"
 #include "hippoSingleton.hpp"
+#include "hippoCommonFunc.hpp"
 
 #endif  //!__HIPPOCOMMON__H__

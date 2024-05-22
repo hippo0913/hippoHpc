@@ -79,6 +79,12 @@
         "hash_map": "cpp",
         "hash_set": "cpp",
         "slist": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "__bit_reference": "cpp",
+        "__hash_table": "cpp",
+        "__split_buffer": "cpp",
+        "__tree": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }

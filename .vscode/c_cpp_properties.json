@@ -4,8 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                // "${workspaceFolder}/include/**",
-                "/usr/local/cuda-11.4/include"
+                "${workspaceFolder}/cpp/inc/**",
+                "/usr/local/cuda-11.4/include/**",
+                "/usr/include/opencv4/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

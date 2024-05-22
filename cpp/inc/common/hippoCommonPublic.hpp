@@ -13,12 +13,15 @@
 #define NAMESPACE_COMMON_BEGIN namespace common {
 #define NAMESPACE_COMMON_END }
 
+#define NAMESPACE_IMAGE_BEGIN namespace image {
+#define NAMESPACE_IMAGE_END }
+
+#include <iostream>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <memory>
-
-#include <iostream>
+#include <fstream>
 
 #endif  //!__HIPPOPUBLIC__H__
